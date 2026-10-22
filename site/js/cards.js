@@ -16,7 +16,8 @@ export function cardHtml(c, i = 0) {
         <span class="tag ${c.sure ? "" : "guess"}">${c.sure ? "we're sure" : "our guess"}</span>
         <details>
           <summary>How we know</summary>
-          <p class="how">${escapeHtml(c.how)}</p>
+          ${c.from ? `<p class="from"><span class="label">Where it comes from</span>${escapeHtml(c.from)}</p>` : ""}
+          <p class="how"><span class="label">What it said</span>${escapeHtml(c.how)}</p>
         </details>
       </div>
     </article>`;

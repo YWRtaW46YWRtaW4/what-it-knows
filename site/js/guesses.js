@@ -1,6 +1,7 @@
 // Turns raw browser signals into plain sentences, grouped so each section digs a level deeper.
 
 import { hasFont } from "./probes.js";
+import { SOURCES as WHERE_FROM } from "./sources.js";
 
 const LANGUAGE_NAMES = new Intl.DisplayNames(["en"], { type: "language" });
 const MAC_NAMES = { 11: "Big Sur", 12: "Monterey", 13: "Ventura", 14: "Sonoma", 15: "Sequoia", 26: "Tahoe" };
@@ -9,8 +10,8 @@ const DAYS = ["", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Satur
 // Apple, WWDC 2025: Tahoe is the last macOS for Intel Macs, with security fixes for about 3 years.
 const INTEL_FIXES_END = 2028;
 
-function card(icon, says, sure, how) {
-  return { icon, says, sure, how };
+function card(icon, says, sure, how, from) {
+  return { icon, says, sure, how, from: WHERE_FROM[from] };
 }
 
 function withArticle(word) {
@@ -55,7 +56,7 @@ function guessModel(s, devices, os) {
     // Longest code first, so "A142P" isn't read as "A142".
     const known = Object.keys(devices.android).sort((a, b) => b.length - a.length)
       .find((k) => s.hints.model.startsWith(k));
-    return { name: known ? devices.android[known] : `phone with the model code ${s.hints.model}` };
+    return { name: known ? devices.android[known] : `phone with the model code ${s.hints.model}`, code: s.hints.model };
   }
   if (os === "Android" && s.gpu) {
     // Chrome hides the model on plain pages, but the graphics chip names the processor family.
@@ -130,20 +131,20 @@ function whereYouAre(s, p) {
   const out = [];
   if (p.city) {
     out.push(card("pin", `You're in or near ${p.city}`, false,
-      `Your device's time zone is "${s.timeZone}". Most people set it to where they live.`));
+      `Your device's time zone is "${s.timeZone}". Most people set it to where they live.`, "timezone"));
   }
-  out.push(card("clock", `It's ${localTime()} where you are`, true, `Time zone ${s.timeZone}.`));
+  out.push(card("clock", `It's ${localTime()} where you are`, true, `Time zone ${s.timeZone}.`, "clock"));
   const named = p.langs.map((l) => LANGUAGE_NAMES.of(l));
   out.push(card("speech", named.length > 1
     ? `You read ${named.slice(0, -1).join(", ")} and ${named.at(-1)}`
-    : `You speak ${named[0]}`, true, `Language settings: ${s.languages.join(", ")}`));
+    : `You speak ${named[0]}`, true, `Language settings: ${s.languages.join(", ")}`, "languages"));
   if (p.layout) {
     out.push(card("keyboard", `Your keyboard is set up ${p.layout === "Dvorak" ? "as Dvorak" : `for ${p.layout}`}`, true,
-      `The key next to Tab types "${s.keyboard[0]}".`));
+      `The key next to Tab types "${s.keyboard[0]}".`, "keyboard"));
   }
   if (s.weekStart) {
     out.push(card("calendar", `Your calendar starts on ${DAYS[s.weekStart]}`, true,
-      "Region settings for your language."));
+      "Region settings for your language.", "region"));
   }
   return out;
 }
@@ -153,23 +154,25 @@ function yourDevice(s, p) {
   if (p.model) {
     out.push(p.model.chip
       ? card("phone", `You're on an Android ${p.model.name}`, false,
-        `Your graphics chip is ${s.gpu}, which comes in the ${p.model.chip}.`)
+        `Your graphics chip is ${s.gpu}, which comes in the ${p.model.chip}.`, "gpu")
+      : p.model.code ? card("phone", `You're on ${withArticle(p.model.name)}`, true,
+        `Model code ${p.model.code}`, "hints")
       : card(p.os === "Mac" ? "laptop" : "phone", `You're on ${withArticle(p.model.name)}`, false,
-        `Screen ${s.screen.w}×${s.screen.h}${s.hints?.architecture ? `, ${s.hints.architecture} chip` : ""}. Only a few models report that size.`));
+        `Screen ${s.screen.w}×${s.screen.h}${s.hints?.architecture ? `, ${s.hints.architecture} chip` : ""}. Only a few models report that size.`, "screen"));
     const age = p.model.year ? new Date().getFullYear() - p.model.year : 0;
     if (age >= 2) {
       out.push(card("clock", `Your ${p.os === "Mac" ? "computer" : "phone"} is at least ${age} years old`, false,
-        `That screen size first shipped in ${p.model.year}.`));
+        `That screen size first shipped in ${p.model.year}.`, "screen"));
     }
   } else if (p.os) {
     out.push(card(p.os === "iPhone" || p.os === "Android" ? "phone" : "laptop",
-      `You're on ${withArticle(p.os)}`, true, s.ua));
+      `You're on ${withArticle(p.os)}`, true, s.ua, "ua"));
   }
   if (p.version) {
     out.push(card("laptop", `You're running ${p.version}`, true,
-      `Chrome's device hints: version ${s.hints.platformVersion}.`));
+      `Chrome's device hints: version ${s.hints.platformVersion}.`, "hints"));
   }
-  if (p.browser) out.push(card("browser", `You're using ${p.browser}`, true, s.ua));
+  if (p.browser) out.push(card("browser", `You're using ${p.browser}`, true, s.ua, "ua"));
   return out;
 }
 
@@ -177,57 +180,57 @@ function insideIt(s, p) {
   const out = [];
   if (s.hints?.architecture && p.os === "Mac") {
     out.push(card("chip", `Your Mac has ${p.intelMac ? "an Intel chip" : "an Apple chip"}`, true,
-      `Chrome's device hints: architecture "${s.hints.architecture}".`));
+      `Chrome's device hints: architecture "${s.hints.architecture}".`, "hints"));
   }
-  if (s.cores) out.push(card("chip", `Your processor has ${s.cores} cores`, true, `hardwareConcurrency = ${s.cores}`));
-  if (s.memory) out.push(card("memory", `It has ${s.memory} GB of memory`, true, `deviceMemory = ${s.memory}`));
-  if (p.gpu) out.push(card("chip", `Your graphics chip is ${withArticle(p.gpu)}`, true, s.gpu));
+  if (s.cores) out.push(card("chip", `Your processor has ${s.cores} cores`, true, `hardwareConcurrency = ${s.cores}`, "cores"));
+  if (s.memory) out.push(card("memory", `It has ${s.memory} GB of memory`, true, `deviceMemory = ${s.memory}`, "memory"));
+  if (p.gpu) out.push(card("chip", `Your graphics chip is ${withArticle(p.gpu)}`, true, s.gpu, "gpu"));
   if (s.hdr) {
-    out.push(card("screen", "Your screen does HDR", true, "dynamic-range: high"));
+    out.push(card("screen", "Your screen does HDR", true, "dynamic-range: high", "display"));
   } else if (s.vivid) {
-    out.push(card("screen", "Your screen shows extra-vivid colours", true, "color-gamut: p3"));
+    out.push(card("screen", "Your screen shows extra-vivid colours", true, "color-gamut: p3", "display"));
   }
   if (s.refreshHz >= 100) {
     out.push(card("screen", `Your screen redraws ${Math.round(s.refreshHz / 10) * 10} times a second, faster than the usual 60`, true,
-      `Counted ${s.refreshHz} frames a second while this page was on screen.`));
+      `Counted ${s.refreshHz} frames a second while this page was on screen.`, "frames"));
   }
-  if (s.bluetooth) out.push(card("bluetooth", "Your device has Bluetooth", true, "navigator.bluetooth.getAvailability() = true"));
+  if (s.bluetooth) out.push(card("bluetooth", "Your device has Bluetooth", true, "navigator.bluetooth.getAvailability() = true", "bluetooth"));
   if (s.media?.cameras) {
     out.push(card("camera", s.media.cameras > 1 ? `You have ${s.media.cameras} cameras` : "You have a camera", true,
-      "The browser lists your cameras and microphones before asking to use them."));
+      "The browser lists your cameras and microphones before asking to use them.", "media"));
   }
   if (s.media?.mics > 1) {
-    out.push(card("mic", `You have ${s.media.mics} microphones`, true, "Often a headset or headphones plugged in."));
+    out.push(card("mic", `You have ${s.media.mics} microphones`, true, "Often a headset or headphones plugged in.", "media"));
   }
   return out;
 }
 
 function yourSetup(s, p) {
   const out = [];
-  if (s.dark) out.push(card("moon", "You use dark mode", true, "prefers-color-scheme: dark"));
+  if (s.dark) out.push(card("moon", "You use dark mode", true, "prefers-color-scheme: dark", "settings"));
   if (p.dockHidden) {
     out.push(card("window", "You've hidden your Dock", false,
-      `Your screen is ${s.screen.h} px tall and apps can use all of it below the ${s.screen.availTop} px menu bar.`));
+      `Your screen is ${s.screen.h} px tall and apps can use all of it below the ${s.screen.availTop} px menu bar.`, "screenEdges"));
   } else if (p.dockSide) {
-    out.push(card("window", `Your Dock is on the ${p.dockSide}`, false, "The usable screen is narrower on that side."));
+    out.push(card("window", `Your Dock is on the ${p.dockSide}`, false, "The usable screen is narrower on that side.", "screenEdges"));
   }
   if (p.fullScreenWindow) {
     out.push(card("window", "Your browser fills the whole screen", true,
-      `Window ${s.win.outerW}×${s.win.outerH}, usable screen ${s.screen.availW}×${s.screen.availH}.`));
+      `Window ${s.win.outerW}×${s.win.outerH}, usable screen ${s.screen.availW}×${s.screen.availH}.`, "window"));
   } else if (!s.coarse && s.win.outerW > 0) {
     const share = (s.win.outerW * s.win.outerH) / (s.screen.availW * s.screen.availH);
     out.push(card("window", `This window fills ${Math.round(share * 100)}% of your screen`, true,
-      `Window ${s.win.outerW}×${s.win.outerH}, usable screen ${s.screen.availW}×${s.screen.availH}.`));
+      `Window ${s.win.outerW}×${s.win.outerH}, usable screen ${s.screen.availW}×${s.screen.availH}.`, "window"));
   }
   if (p.browser === "Chrome" && !s.coarse && s.win.outerH > 0 && p.toolbarHeight > 105 && p.toolbarHeight < 160) {
     out.push(card("browser", "You keep your bookmarks bar showing", false,
-      `The browser's top bars take ${p.toolbarHeight} px. Plain Chrome is about 87.`));
+      `The browser's top bars take ${p.toolbarHeight} px. Plain Chrome is about 87.`, "window"));
   }
-  if (s.extended) out.push(card("screens", "You've got a second screen plugged in", true, "screen.isExtended = true"));
-  if (s.lessMotion) out.push(card("still", "You've turned animations down", true, "prefers-reduced-motion: reduce"));
-  if (s.moreContrast) out.push(card("still", "You've turned contrast up", true, "prefers-contrast: more"));
+  if (s.extended) out.push(card("screens", "You've got a second screen plugged in", true, "screen.isExtended = true", "screens"));
+  if (s.lessMotion) out.push(card("still", "You've turned animations down", true, "prefers-reduced-motion: reduce", "settings"));
+  if (s.moreContrast) out.push(card("still", "You've turned contrast up", true, "prefers-contrast: more", "settings"));
   if (s.textSize > 16) {
-    out.push(card("font", "You've made your text bigger than normal", true, `Default text is ${s.textSize}px, not 16px.`));
+    out.push(card("font", "You've made your text bigger than normal", true, `Default text is ${s.textSize}px, not 16px.`, "settings"));
   }
   return out;
 }
@@ -235,23 +238,23 @@ function yourSetup(s, p) {
 function installed(s, devices) {
   s.fonts = devices.fonts.filter((f) => hasFont(f.font));
   const out = [];
-  for (const f of s.fonts) out.push(card("font", f.says, false, `The font "${f.font}" is installed.`));
-  if (s.adBlock) out.push(card("shield", "You use an ad blocker", false, "A fake ad on this page was hidden."));
+  for (const f of s.fonts) out.push(card("font", f.says, false, `The font "${f.font}" is installed.`, "fonts"));
+  if (s.adBlock) out.push(card("shield", "You use an ad blocker", false, "A fake ad on this page was hidden.", "adbait"));
   for (const name of s.addOns) {
     out.push(card(/Developer|DevTools/.test(name) ? "chip" : "key",
       /wallet|MetaMask|Phantom/.test(name) ? `You have a crypto wallet (${name})` : `You have ${name} installed. You build websites`,
-      true, `${name} announces itself to every page you visit.`));
+      true, `${name} announces itself to every page you visit.`, "globals"));
   }
   return out;
 }
 
 export function nothingFoundCard() {
   return card("shield", "Nothing jumped in. No password manager or writing helper we know of is watching that box", false,
-    "We looked for marks left by 1Password, LastPass, Bitwarden, Dashlane, Grammarly, Dark Reader and Google Translate.");
+    "We looked for marks left by 1Password, LastPass, Bitwarden, Dashlane, Grammarly, Dark Reader and Google Translate.", "pagemarks");
 }
 
 export function extensionCard(name) {
-  return card("key", `You use ${name}`, true, `${name} added its own marks to this page.`);
+  return card("key", `You use ${name}`, true, `${name} added its own marks to this page.`, "pagemarks");
 }
 
 const SOURCES = [
@@ -265,13 +268,13 @@ const SOURCES = [
 function cameFrom(s) {
   if (!s.referrer) {
     return card("link", "You came here directly. Typed it, used a bookmark, or tapped a link in an app that hides where you came from", false,
-      "Your browser didn't say which page sent you here.");
+      "Your browser didn't say which page sent you here.", "referrer");
   }
   const host = new URL(s.referrer).hostname.replace(/^www\./, "");
   const named = SOURCES.find(([pattern]) => pattern.test(host))?.[1];
   const searchNote = /search/.test(named || "") ? " We can't see what you searched for." : "";
   return card("link", `You came here from ${named || host}.${searchNote}`, true,
-    `Your browser told us the site that sent you: ${host}. Browsers stopped sharing the exact page a few years ago.`);
+    `Your browser told us the site that sent you: ${host}. Browsers stopped sharing the exact page a few years ago.`, "referrer");
 }
 
 // Android Chrome names the connection type. Elsewhere there's only a rough, capped speed
@@ -292,23 +295,23 @@ function rightNow(s, p) {
     const says = p.batteryPct === 100 ? "Your battery is full"
       : s.battery.charging ? `You're plugged in, at ${p.batteryPct}%`
       : `You're on ${p.batteryPct}% and not charging`;
-    out.push(card("battery", says, true, "navigator.getBattery()"));
+    out.push(card("battery", says, true, "navigator.getBattery()", "battery"));
     if (p.batteryPct < 100 && !s.battery.charging && Number.isFinite(s.battery.left) && s.battery.left > 0) {
       const hrs = s.battery.left / 3600;
       out.push(card("battery", hrs >= 1 ? `About ${Math.round(hrs)} hours of battery left`
-        : `About ${Math.round(hrs * 60)} minutes of battery left`, true, `dischargingTime = ${Math.round(s.battery.left)} s`));
+        : `About ${Math.round(hrs * 60)} minutes of battery left`, true, `dischargingTime = ${Math.round(s.battery.left)} s`, "battery"));
     }
   }
   const link = connectionKind(s);
-  if (link) out.push(card("wifi", link.says, link.sure, link.how));
+  if (link) out.push(card("wifi", link.says, link.sure, link.how, "connection"));
   out.push(cameFrom(s));
   if (s.historyLength > 2) {
     out.push(card("link", `You visited ${s.historyLength - 1} pages in this tab before this one`, true,
-      `history.length = ${s.historyLength}`));
+      `history.length = ${s.historyLength}`, "history"));
   }
   if (s.gpc || s.dnt) {
     out.push(card("hand", "You've asked websites not to track you", true,
-      `${s.gpc ? "Global Privacy Control" : "Do Not Track"} is on. It's a request, not a lock.`));
+      `${s.gpc ? "Global Privacy Control" : "Do Not Track"} is on. It's a request, not a lock.`, "dnt"));
   }
   return out;
 }
@@ -331,17 +334,17 @@ export function makeCombos(s, p, total, extensions) {
     const bits = [`It's ${localTime()}`];
     if (p.batteryPct !== null && p.batteryPct < 100) bits.push(`you're on ${p.batteryPct}%`);
     if (s.dark) bits.push("the lights are down in dark mode");
-    out.push(card("moon", `${bits.join(", ")}. Go to bed.`, false, "Your clock, battery and display settings."));
+    out.push(card("moon", `${bits.join(", ")}. Go to bed.`, false, "Your clock, battery and display settings.", "combo"));
   }
   if (p.intelMac && p.version === "macOS Tahoe") {
     out.push(card("shield", `Your Mac is on its last macOS. Apple's security fixes for it stop around ${INTEL_FIXES_END}.`, true,
-      "Apple said at WWDC 2025 that Tahoe is the last macOS for Intel Macs, with security updates for about three years."));
+      "Apple said at WWDC 2025 that Tahoe is the last macOS for Intel Macs, with security updates for about three years.", "apple"));
   }
   if (p.city && (p.otherLangs.length || p.layout)) {
     const extra = p.otherLangs.length ? `read ${p.otherLangs.map((l) => LANGUAGE_NAMES.of(l)).join(" and ")}`
       : `type on a ${p.layout} keyboard`;
     out.push(card("pin", `You live near ${p.city} but you ${extra}. Moved here, or family overseas?`, false,
-      "Your time zone against your language and keyboard settings."));
+      "Your time zone against your language and keyboard settings.", "combo"));
   }
   const techSignals = [
     s.memory >= 32 && "32 GB of memory",
@@ -355,7 +358,7 @@ export function makeCombos(s, p, total, extensions) {
   ].filter(Boolean);
   if (techSignals.length >= 3) {
     out.push(card("laptop", `Odds are you work in tech. ${techSignals.slice(0, 4).join(", ").replace(/^./, (c) => c.toUpperCase())}.`, false,
-      "Settings that are far more common among people who work with computers."));
+      "Settings that are far more common among people who work with computers.", "combo"));
   }
 
   const careful = [];
@@ -365,10 +368,10 @@ export function makeCombos(s, p, total, extensions) {
   if (s.adBlock) careful.push("block ads");
   if (careful.length) {
     out.push(card("hand", `You ${careful.join(", ")}. Good habits. We still worked out ${total} things about you.`, true,
-      "Count of everything on this page so far."));
+      "Count of everything on this page so far.", "combo"));
   } else {
     out.push(card("hand", `We worked out ${total} things about you, and you haven't clicked anything.`, true,
-      "Count of everything on this page so far."));
+      "Count of everything on this page so far.", "combo"));
   }
   return out;
 }
