@@ -15,7 +15,7 @@ function describe(beta, gamma, moving, portraitScreen) {
   const b = Math.abs(beta);
   const g = Math.abs(gamma);
   const late = new Date().getHours() >= 21 || new Date().getHours() < 6;
-  if (moving) return { pose: "walking", text: "You're on the move. Walking, or on a bus?" };
+  if (moving) return { pose: "walking", text: "You're walking. We can count your steps." };
   if (b > 110) return { pose: "back", text: `You're lying on your back, holding your phone above your face.${late ? " In bed?" : ""}` };
   if (g > 55 && b < 45) {
     return portraitScreen
@@ -34,7 +34,6 @@ export function watchPosture(panel) {
   const numbers = panel.querySelector(".posture-numbers");
   let beta = null;
   let gamma = 0;
-  let shake = 0;
   let shown = "";
 
   addEventListener("deviceorientation", (e) => {
@@ -47,15 +46,34 @@ export function watchPosture(panel) {
     phone.style.transform = `rotateX(${(90 - beta).toFixed(1)}deg) rotateY(${gamma.toFixed(1)}deg)`;
   });
 
+  // Walking shows up as a steady bump in the phone's movement, roughly twice a second.
+  // Count bumps over the last 5 seconds and only call it walking if they're regular.
+  const bumps = [];
+  let last = 0;
   addEventListener("devicemotion", (e) => {
     const a = e.acceleration;
-    if (a && a.x != null) shake = shake * 0.9 + Math.hypot(a.x, a.y, a.z) * 0.1;
+    if (!a || a.x == null) return;
+    const now = performance.now();
+    const size = Math.hypot(a.x, a.y, a.z);
+    if (size > 1.5 && now - last > 300) {
+      bumps.push(now);
+      last = now;
+    }
+    while (bumps.length && now - bumps[0] > 5000) bumps.shift();
   });
+
+  const walking = () => {
+    if (bumps.length < 6 || beta === null || Math.abs(beta) < 20 || Math.abs(beta) > 110) return false;
+    const gaps = bumps.slice(1).map((t, i) => t - bumps[i]);
+    const mean = gaps.reduce((n, g) => n + g, 0) / gaps.length;
+    const spread = Math.sqrt(gaps.reduce((n, g) => n + (g - mean) ** 2, 0) / gaps.length);
+    return mean > 350 && mean < 900 && spread < mean * 0.35;
+  };
 
   setInterval(() => {
     if (beta === null) return;
     const portrait = (screen.orientation?.type || "portrait").startsWith("portrait");
-    const now = describe(beta, gamma, shake > 1.2, portrait);
+    const now = describe(beta, gamma, walking(), portrait);
     numbers.textContent = `tilted ${Math.round(beta)}° forward, ${Math.round(gamma)}° sideways`;
     if (now.text === shown) return;
     shown = now.text;

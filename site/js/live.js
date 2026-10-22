@@ -30,7 +30,6 @@ export function watchBehaviour(list) {
       : "You're scrolling with a mouse wheel.");
   }, { passive: true });
 
-  addEventListener("touchstart", () => say("touch", "You're using a touch screen."), { passive: true });
 
   document.addEventListener("copy", () => say("copy", "You just copied something from this page."));
 
