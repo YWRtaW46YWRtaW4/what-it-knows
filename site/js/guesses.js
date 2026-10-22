@@ -371,11 +371,11 @@ export function makeCombos(s, p, total, extensions) {
   if (manager) careful.push(`use ${manager}`);
   if (s.adBlock) careful.push("block ads");
   if (careful.length) {
-    out.push(card("hand", `You ${careful.join(", ")}. Good habits. We still worked out ${total} things about you.`, true,
-      "Count of everything on this page so far.", "combo"));
+    out.push(card("hand", `You ${careful.join(", ")}. Good habits. We still worked all of this out about you.`, true,
+      "Everything on this page.", "combo"));
   } else {
-    out.push(card("hand", `We worked out ${total} things about you, and you haven't clicked anything.`, true,
-      "Count of everything on this page so far.", "combo"));
+    out.push(card("hand", "We worked all of this out about you, and you haven't clicked anything.", true,
+      "Everything on this page.", "combo"));
   }
   return out;
 }
