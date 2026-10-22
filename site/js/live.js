@@ -42,39 +42,9 @@ export function watchBehaviour(list) {
     }
   }, { passive: true });
 
-  // Android Chrome sends tilt without asking (on https pages). iPhones ask first, so nothing arrives there.
-  // beta: 0 = flat face up, 90 = upright, near 180 = face down. gamma: turned on its side.
-  const readings = [];
-  addEventListener("deviceorientation", (e) => {
-    if (e.beta == null) return;
-    readings.push({ beta: e.beta, gamma: e.gamma });
-    if (readings.length < 20) return;
-    const avg = (key) => readings.reduce((n, r) => n + r[key], 0) / readings.length;
-    const beta = Math.abs(avg("beta"));
-    const gamma = Math.abs(avg("gamma"));
-    const late = new Date().getHours() >= 21 || new Date().getHours() < 6;
-    if (beta > 110) {
-      say("posture", late ? "You're lying on your back, holding your phone above your face. In bed?"
-        : "You're lying on your back, holding your phone above your face.");
-    } else if (gamma > 55) {
-      say("posture", late ? "You're lying on your side. In bed, by the look of it." : "You're lying on your side.");
-    } else if (beta < 12) {
-      say("posture", "Your phone is lying flat, on a table or your lap.");
-    } else if (beta > 70) {
-      say("posture", "You're holding your phone upright. Standing up, or sitting up straight.");
-    } else {
-      say("posture", `You're holding your phone at about ${Math.round(beta)} degrees. Sitting, probably.`);
-    }
-    readings.length = 0;
-  });
-
-  addEventListener("devicemotion", (e) => {
-    const a = e.acceleration;
-    if (a && Math.hypot(a.x, a.y, a.z) > 2.5) say("moving", "You're moving. Walking, or on a bus?");
-  });
-
-  addEventListener("pointerdown", (e) => {
-    if (e.pointerType === "pen") say("pen", "You're using a stylus, like an Apple Pencil.");
+  // Automatic dark mode switches by itself at sunset and sunrise. A page can notice.
+  matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+    say("autodark", `Your screen just switched to ${e.matches ? "dark" : "light"} mode by itself. It's on a timer.`);
   });
 
   let idle;

@@ -3,6 +3,7 @@ import { readProfile, makeReveal, makeSections, makeCombos, extensionCard, nothi
 import { renderCards, renderSections } from "./cards.js";
 import { deviceArt } from "./icons.js";
 import { watchBehaviour } from "./live.js";
+import { watchPosture } from "./posture.js";
 import { watchAutofill } from "./autofill.js";
 import { setUpProviderButton } from "./provider.js";
 
@@ -39,6 +40,7 @@ async function start() {
 
   watchAutofill(document.getElementById("autofill"), document.getElementById("autofill-result"));
   watchBehaviour(document.getElementById("live"));
+  watchPosture(document.getElementById("posture"));
 }
 
 // Password managers and writing helpers add things to the page when you tap a box.

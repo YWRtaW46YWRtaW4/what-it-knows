@@ -305,3 +305,32 @@ h2 { display: flex; align-items: center; gap: 4px; }
 .card .label { display: block; font: 11px var(--mono); text-transform: uppercase; letter-spacing: 0.05em; color: var(--dim); margin-bottom: 2px; }
 
 .autofill-result.calm { color: var(--accent); font-size: 17px; font-weight: 500; }
+
+/* Live posture panel */
+.posture-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  background: var(--card);
+  border: 1px solid var(--accent);
+  border-radius: 16px;
+  padding: 20px 12px;
+}
+.tilt-stage { perspective: 400px; width: 90px; height: 140px; display: grid; place-items: center; }
+.tilt-phone {
+  width: 60px; height: 112px;
+  border: 3px solid var(--accent);
+  border-radius: 12px;
+  transition: transform 0.15s linear;
+  transform-style: preserve-3d;
+  display: grid; place-items: center;
+}
+.tilt-phone span { width: 44px; height: 88px; border-radius: 4px; background: rgba(92, 255, 157, 0.15); }
+.figure { width: 150px; height: auto; }
+.figure path, .figure circle { fill: none; stroke: var(--fg); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.figure .phone { fill: var(--accent); stroke: none; }
+.figure .gaze { stroke: var(--accent); stroke-dasharray: 2 4; }
+.posture-text { font-size: 22px; font-weight: 600; margin: 14px 0 4px; }
+.posture-numbers { font: 13px var(--mono); color: var(--dim); margin: 0 0 8px; }
+@media (prefers-reduced-motion: reduce) { .tilt-phone { transition: none; } }

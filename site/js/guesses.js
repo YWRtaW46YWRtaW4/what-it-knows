@@ -207,7 +207,12 @@ function insideIt(s, p) {
 
 function yourSetup(s, p) {
   const out = [];
-  if (s.dark) out.push(card("moon", "You use dark mode", true, "prefers-color-scheme: dark", "settings"));
+  if (s.dark) {
+    // Automatic dark mode only switches on around sunset, so dark at midday means it's always on.
+    const daytime = p.hour >= 10 && p.hour < 16;
+    out.push(card("moon", daytime ? "You keep dark mode on all the time" : "You use dark mode", daytime,
+      daytime ? "Dark mode is on in the middle of the day, so it isn't on a sunset timer." : "prefers-color-scheme: dark", "settings"));
+  }
   if (p.dockHidden) {
     out.push(card("window", "You've hidden your Dock", false,
       `Your screen is ${s.screen.h} px tall and apps can use all of it below the ${s.screen.availTop} px menu bar.`, "screenEdges"));
@@ -333,7 +338,6 @@ export function makeCombos(s, p, total, extensions) {
   if (p.hour >= 22 || p.hour < 5) {
     const bits = [`It's ${localTime()}`];
     if (p.batteryPct !== null && p.batteryPct < 100) bits.push(`you're on ${p.batteryPct}%`);
-    if (s.dark) bits.push("the lights are down in dark mode");
     out.push(card("moon", `${bits.join(", ")}. Go to bed.`, false, "Your clock, battery and display settings.", "combo"));
   }
   if (p.intelMac && p.version === "macOS Tahoe") {
