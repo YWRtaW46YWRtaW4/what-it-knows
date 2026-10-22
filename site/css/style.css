@@ -303,3 +303,5 @@ h2 { display: flex; align-items: center; gap: 4px; }
 
 .card .from { font-size: 15px; color: var(--fg); margin: 4px 0 8px; line-height: 1.4; }
 .card .label { display: block; font: 11px var(--mono); text-transform: uppercase; letter-spacing: 0.05em; color: var(--dim); margin-bottom: 2px; }
+
+.autofill-result.calm { color: var(--accent); font-size: 17px; font-weight: 500; }

@@ -249,7 +249,7 @@ function installed(s, devices) {
 }
 
 export function nothingFoundCard() {
-  return card("shield", "Nothing jumped in. No password manager or writing helper we know of is watching that box", false,
+  return card("shield", "Nothing jumped in. That's good. A password manager or writing helper would have added its own marks to that box, and this page could see them", false,
     "We looked for marks left by 1Password, LastPass, Bitwarden, Dashlane, Grammarly, Dark Reader and Google Translate.", "pagemarks");
 }
 
