@@ -57,6 +57,15 @@
     <div id="extension-cards" class="cards"></div>
   </section>
 
+  <section class="section location">
+    <h2>We could look you up. We chose not to.</h2>
+    <p>Every site you visit sees your internet address. From that it can tell which internet company you use and roughly where you are. No permission needed.</p>
+    <p>We didn't look, because it means sending your address to another company. Tap if you want to see.</p>
+    <button id="provider" class="locate" type="button">Show my internet company</button>
+    <div id="provider-result" class="locate-result" aria-live="polite"></div>
+    <p class="note small">Tapping sends your internet address to <a href="https://www.geojs.io/privacy/">GeoJS</a>, a free lookup service that says it keeps no logs. Data from <a href="https://www.maxmind.com">MaxMind</a> GeoLite2.</p>
+  </section>
+
   <section class="section together">
     <h2><span class="step">08</span>Putting it together</h2>
     <div id="combos" class="cards"></div>
@@ -67,17 +76,8 @@
     <ul id="live" class="live-list" aria-live="polite"></ul>
   </section>
 
-  <section class="section location">
-    <h2>We could look you up. We chose not to.</h2>
-    <p>Every site you visit sees your internet address. From that it can tell which internet company you use and roughly where you are. No permission needed.</p>
-    <p>We didn't look, because it means sending your address to another company. Tap if you want to see.</p>
-    <button id="provider" class="locate" type="button">Show my internet company</button>
-    <div id="provider-result" class="locate-result" aria-live="polite"></div>
-    <p class="note small">Tapping sends your internet address to <a href="https://www.geojs.io/privacy/">GeoJS</a>, a free lookup service that says it keeps no logs. Data from <a href="https://www.maxmind.com">MaxMind</a> GeoLite2.</p>
-  </section>
-
   <footer class="section manners">
-    <p class="small">Apart from that button, this page sends nothing anywhere. Everything else was worked out inside your own browser and disappears when you close the tab.</p>
+    <p class="small">Apart from the internet company button, this page sends nothing anywhere. Everything else was worked out inside your own browser and disappears when you close the tab.</p>
   </footer>
 
   <script type="module" src="js/main.js"></script>
