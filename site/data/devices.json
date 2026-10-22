@@ -135,6 +135,10 @@
     }
   ],
   "android": {
+    "A142P": "Nothing Phone (2a) Plus",
+    "A142": "Nothing Phone (2a)",
+    "A065": "Nothing Phone (2)",
+    "A063": "Nothing Phone (1)",
     "SM-S928": "Samsung Galaxy S24 Ultra",
     "SM-S918": "Samsung Galaxy S23 Ultra",
     "SM-S921": "Samsung Galaxy S24",

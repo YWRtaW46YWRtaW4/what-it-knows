@@ -52,8 +52,10 @@ function guessModel(s, devices, os) {
   }
   if (os === "iPhone") return devices.iphone.find((d) => d.w === h && d.h === w);
   if (os === "Android" && s.hints?.model) {
-    const code = Object.keys(devices.android).find((k) => s.hints.model.startsWith(k));
-    return { name: code ? devices.android[code] : s.hints.model };
+    // Longest code first, so "A142P" isn't read as "A142".
+    const known = Object.keys(devices.android).sort((a, b) => b.length - a.length)
+      .find((k) => s.hints.model.startsWith(k));
+    return { name: known ? devices.android[known] : `phone with the model code ${s.hints.model}` };
   }
   if (os === "Android" && s.gpu) {
     // Chrome hides the model on plain pages, but the graphics chip names the processor family.
