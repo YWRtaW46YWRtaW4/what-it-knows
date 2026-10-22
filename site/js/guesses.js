@@ -15,7 +15,7 @@ function card(icon, says, sure, how, from) {
 }
 
 function withArticle(word) {
-  return `${/^[AEIOU]/.test(word) ? "an" : "a"} ${word}`;
+  return `${/^[aeiou]/i.test(word) ? "an" : "a"} ${word}`;
 }
 
 function near(a, b, slack = 24) {
@@ -159,10 +159,11 @@ function yourDevice(s, p) {
         `Model code ${p.model.code}`, "hints")
       : card(p.os === "Mac" ? "laptop" : "phone", `You're on ${withArticle(p.model.name)}`, false,
         `Screen ${s.screen.w}×${s.screen.h}${s.hints?.architecture ? `, ${s.hints.architecture} chip` : ""}. Only a few models report that size.`, "screen"));
-    const age = p.model.year ? new Date().getFullYear() - p.model.year : 0;
+    // The newest model with this screen size sets the minimum age.
+    const age = p.model.latest ? new Date().getFullYear() - p.model.latest : 0;
     if (age >= 2) {
-      out.push(card("clock", `Your ${p.os === "Mac" ? "computer" : "phone"} is at least ${age} years old`, false,
-        `That screen size first shipped in ${p.model.year}.`, "screen"));
+      out.push(card("clock", `Your ${p.os === "Mac" ? "computer" : "phone"} model is at least ${age} years old`, false,
+        `The newest model with this screen size came out in ${p.model.latest}.`, "screen"));
     }
   } else if (p.os) {
     out.push(card(p.os === "iPhone" || p.os === "Android" ? "phone" : "laptop",
@@ -342,7 +343,7 @@ export function makeCombos(s, p, total, extensions) {
   }
   if (p.intelMac && p.version === "macOS Tahoe") {
     out.push(card("shield", `Your Mac is on its last macOS. Apple's security fixes for it stop around ${INTEL_FIXES_END}.`, true,
-      "Apple said at WWDC 2025 that Tahoe is the last macOS for Intel Macs, with security updates for about three years.", "apple"));
+      "Apple at WWDC 2025: Tahoe \"will be the final release for Intel Macs\". Apple told reporters those Macs get security updates for three years after it.", "apple"));
   }
   if (p.city && (p.otherLangs.length || p.layout)) {
     const extra = p.otherLangs.length ? `read ${p.otherLangs.map((l) => LANGUAGE_NAMES.of(l)).join(" and ")}`

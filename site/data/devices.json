@@ -1,81 +1,67 @@
 {
-  "_note": "Screen sizes in CSS pixels (the size the browser reports). From memory, verify against Apple spec pages before publishing. Years are the first year that size shipped. GPU to phone table from memory: verify against maker spec pages before publishing.",
+  "_note": "Screen sizes in CSS pixels at each model's default setting. 'latest' is the newest model sharing that size, used for the 'at least N years old' card. Checked 23/10/2026 against public spec references (see research/SOURCES_DEVICES.md).",
   "mac": [
     {
       "w": 1792,
       "h": 1120,
       "arch": "x86",
       "name": "16-inch MacBook Pro (2019)",
-      "year": 2019
-    },
-    {
-      "w": 1536,
-      "h": 960,
-      "arch": "x86",
-      "name": "16-inch MacBook Pro (2019)",
-      "year": 2019
+      "latest": 2019
     },
     {
       "w": 1440,
       "h": 900,
       "arch": "x86",
-      "name": "13 or 15-inch MacBook Pro (Intel)",
-      "year": 2016
-    },
-    {
-      "w": 1680,
-      "h": 1050,
-      "arch": "x86",
-      "name": "15-inch MacBook Pro (Intel)",
-      "year": 2016
+      "name": "13-inch MacBook Air or Pro (Intel)",
+      "latest": 2020
     },
     {
       "w": 1440,
       "h": 900,
       "arch": "arm",
       "name": "13-inch MacBook Air or Pro (M1 or M2)",
-      "year": 2020
+      "latest": 2022
     },
     {
       "w": 1470,
       "h": 956,
       "arch": "arm",
       "name": "13-inch MacBook Air (M2 or later)",
-      "year": 2022
+      "latest": 2025
     },
     {
       "w": 1710,
       "h": 1107,
       "arch": "arm",
       "name": "15-inch MacBook Air",
-      "year": 2023
+      "latest": 2025
     },
     {
       "w": 1512,
       "h": 982,
       "arch": "arm",
       "name": "14-inch MacBook Pro",
-      "year": 2021
+      "latest": 2025
     },
     {
       "w": 1728,
       "h": 1117,
       "arch": "arm",
       "name": "16-inch MacBook Pro",
-      "year": 2021
+      "latest": 2025
     },
     {
       "w": 2240,
       "h": 1260,
       "arch": "arm",
       "name": "24-inch iMac",
-      "year": 2021
+      "latest": 2024
     },
     {
       "w": 2560,
       "h": 1440,
       "arch": "any",
-      "name": "27-inch iMac or Studio Display"
+      "name": "Mac with a 27-inch screen"
     }
   ],
   "iphone": [
@@ -83,55 +69,55 @@
       "w": 375,
       "h": 667,
       "name": "iPhone SE or iPhone 8",
-      "year": 2017
+      "latest": 2022
     },
     {
       "w": 375,
       "h": 812,
-      "name": "iPhone 12 mini or 13 mini",
-      "year": 2020
+      "name": "iPhone X, 11 Pro, 12 mini or 13 mini",
+      "latest": 2021
     },
     {
       "w": 414,
       "h": 896,
       "name": "iPhone 11 or XR",
-      "year": 2018
+      "latest": 2019
     },
     {
       "w": 390,
       "h": 844,
-      "name": "iPhone 12, 13 or 14",
-      "year": 2020
+      "name": "iPhone 12, 13, 14 or 16e",
+      "latest": 2025
     },
     {
       "w": 393,
       "h": 852,
-      "name": "iPhone 15 or 16",
-      "year": 2023
+      "name": "iPhone 14 Pro, 15 or 16",
+      "latest": 2024
     },
     {
       "w": 402,
       "h": 874,
       "name": "iPhone 16 Pro or 17",
-      "year": 2024
+      "latest": 2025
     },
     {
       "w": 420,
       "h": 912,
       "name": "iPhone Air",
-      "year": 2025
+      "latest": 2025
     },
     {
       "w": 430,
       "h": 932,
-      "name": "iPhone 15 Plus or Pro Max",
-      "year": 2022
+      "name": "iPhone Plus or Pro Max (14 to 16)",
+      "latest": 2024
     },
     {
       "w": 440,
       "h": 956,
       "name": "iPhone 16 or 17 Pro Max",
-      "year": 2024
+      "latest": 2025
     }
   ],
   "android": {
@@ -226,6 +212,11 @@
       "match": "Mali-G710",
       "chip": "Google Tensor G2",
       "like": "a Pixel 7"
+    },
+    {
+      "match": "Mali-G610",
+      "chip": "MediaTek Dimensity 7200",
+      "like": "a Nothing Phone (2a) or Redmi Note 13 Pro+"
     },
     {
       "match": "Mali-G78",

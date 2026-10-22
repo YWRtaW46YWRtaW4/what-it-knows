@@ -36,7 +36,7 @@ function where(s, p) {
 function device(s, p) {
   const kind = p.os === "iPhone" || p.os === "Android" ? "phone" : "laptop";
   const name = p.model?.chip ? `Android ${p.model.name}` : p.model?.name || p.os || "Your device";
-  const age = p.model?.year ? new Date().getFullYear() - p.model.year : null;
+  const age = p.model?.latest ? new Date().getFullYear() - p.model.latest : null;
   return `
     <div class="hero hero-device">
       <div class="device-art">${deviceArt(kind)}
