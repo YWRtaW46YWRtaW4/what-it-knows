@@ -1,0 +1,242 @@
+{
+  "_note": "Screen sizes in CSS pixels (the size the browser reports). From memory, verify against Apple spec pages before publishing. Years are the first year that size shipped. GPU to phone table from memory: verify against maker spec pages before publishing.",
+  "mac": [
+    {
+      "w": 1792,
+      "h": 1120,
+      "arch": "x86",
+      "name": "16-inch MacBook Pro (2019)",
+      "year": 2019
+    },
+    {
+      "w": 1536,
+      "h": 960,
+      "arch": "x86",
+      "name": "16-inch MacBook Pro (2019)",
+      "year": 2019
+    },
+    {
+      "w": 1440,
+      "h": 900,
+      "arch": "x86",
+      "name": "13 or 15-inch MacBook Pro (Intel)",
+      "year": 2016
+    },
+    {
+      "w": 1680,
+      "h": 1050,
+      "arch": "x86",
+      "name": "15-inch MacBook Pro (Intel)",
+      "year": 2016
+    },
+    {
+      "w": 1440,
+      "h": 900,
+      "arch": "arm",
+      "name": "13-inch MacBook Air or Pro (M1 or M2)",
+      "year": 2020
+    },
+    {
+      "w": 1470,
+      "h": 956,
+      "arch": "arm",
+      "name": "13-inch MacBook Air (M2 or later)",
+      "year": 2022
+    },
+    {
+      "w": 1710,
+      "h": 1107,
+      "arch": "arm",
+      "name": "15-inch MacBook Air",
+      "year": 2023
+    },
+    {
+      "w": 1512,
+      "h": 982,
+      "arch": "arm",
+      "name": "14-inch MacBook Pro",
+      "year": 2021
+    },
+    {
+      "w": 1728,
+      "h": 1117,
+      "arch": "arm",
+      "name": "16-inch MacBook Pro",
+      "year": 2021
+    },
+    {
+      "w": 2240,
+      "h": 1260,
+      "arch": "arm",
+      "name": "24-inch iMac",
+      "year": 2021
+    },
+    {
+      "w": 2560,
+      "h": 1440,
+      "arch": "any",
+      "name": "27-inch iMac or Studio Display"
+    }
+  ],
+  "iphone": [
+    {
+      "w": 375,
+      "h": 667,
+      "name": "iPhone SE or iPhone 8",
+      "year": 2017
+    },
+    {
+      "w": 375,
+      "h": 812,
+      "name": "iPhone 12 mini or 13 mini",
+      "year": 2020
+    },
+    {
+      "w": 414,
+      "h": 896,
+      "name": "iPhone 11 or XR",
+      "year": 2018
+    },
+    {
+      "w": 390,
+      "h": 844,
+      "name": "iPhone 12, 13 or 14",
+      "year": 2020
+    },
+    {
+      "w": 393,
+      "h": 852,
+      "name": "iPhone 15 or 16",
+      "year": 2023
+    },
+    {
+      "w": 402,
+      "h": 874,
+      "name": "iPhone 16 Pro or 17",
+      "year": 2024
+    },
+    {
+      "w": 420,
+      "h": 912,
+      "name": "iPhone Air",
+      "year": 2025
+    },
+    {
+      "w": 430,
+      "h": 932,
+      "name": "iPhone 15 Plus or Pro Max",
+      "year": 2022
+    },
+    {
+      "w": 440,
+      "h": 956,
+      "name": "iPhone 16 or 17 Pro Max",
+      "year": 2024
+    }
+  ],
+  "android": {
+    "SM-S928": "Samsung Galaxy S24 Ultra",
+    "SM-S918": "Samsung Galaxy S23 Ultra",
+    "SM-S921": "Samsung Galaxy S24",
+    "SM-S911": "Samsung Galaxy S23",
+    "SM-A556": "Samsung Galaxy A55",
+    "SM-A546": "Samsung Galaxy A54",
+    "Pixel": "Google Pixel"
+  },
+  "fonts": [
+    {
+      "font": "Calibri",
+      "says": "You have Microsoft Office"
+    },
+    {
+      "font": "Myriad Pro",
+      "says": "You use Adobe apps"
+    },
+    {
+      "font": "Roboto",
+      "says": "You've installed Google's fonts"
+    },
+    {
+      "font": "Liberation Sans",
+      "says": "You use LibreOffice"
+    },
+    {
+      "font": "Font Awesome 6 Free",
+      "says": "You build websites (you've installed an icon font)"
+    },
+    {
+      "font": "Fira Code",
+      "says": "You write code (you've installed a coding font)"
+    },
+    {
+      "font": "JetBrains Mono",
+      "says": "You write code (you've installed a coding font)"
+    },
+    {
+      "font": "Comic Neue",
+      "says": "You've got a soft spot for Comic Sans' nicer cousin"
+    }
+  ],
+  "gpus": [
+    {
+      "match": "Adreno \\(TM\\) 830",
+      "chip": "Snapdragon 8 Elite",
+      "like": "a Galaxy S25"
+    },
+    {
+      "match": "Adreno \\(TM\\) 750",
+      "chip": "Snapdragon 8 Gen 3",
+      "like": "a Galaxy S24 Ultra"
+    },
+    {
+      "match": "Adreno \\(TM\\) 740",
+      "chip": "Snapdragon 8 Gen 2",
+      "like": "a Galaxy S23"
+    },
+    {
+      "match": "Adreno \\(TM\\) 730",
+      "chip": "Snapdragon 8 Gen 1",
+      "like": "a 2022 flagship"
+    },
+    {
+      "match": "Adreno \\(TM\\) 6[0-9]{2}",
+      "chip": "a Snapdragon chip",
+      "like": "a mid-range or older Android"
+    },
+    {
+      "match": "Xclipse 9[0-9]{2}",
+      "chip": "Samsung Exynos",
+      "like": "a recent Galaxy S phone"
+    },
+    {
+      "match": "Xclipse 5[0-9]{2}",
+      "chip": "Samsung Exynos",
+      "like": "a Galaxy A55"
+    },
+    {
+      "match": "Mali-G715",
+      "chip": "Google Tensor G3 or G4",
+      "like": "a Pixel 8 or 9"
+    },
+    {
+      "match": "Mali-G710",
+      "chip": "Google Tensor G2",
+      "like": "a Pixel 7"
+    },
+    {
+      "match": "Mali-G78",
+      "chip": "Google Tensor or Exynos 2100",
+      "like": "a Pixel 6 or Galaxy S21"
+    },
+    {
+      "match": "Mali-G68",
+      "chip": "a Samsung Exynos 1380",
+      "like": "a Galaxy A54"
+    },
+    {
+      "match": "PowerVR",
+      "chip": "Google Tensor G5",
+      "like": "a Pixel 10"
+    }
+  ]
+}

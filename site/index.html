@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>What this page already knows about you</title>
+  <meta name="robots" content="noindex">
+  <meta name="description" content="Every website can work this out the moment you arrive. No permission asked.">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="intro">
+    <p class="kicker">&gt; no permission asked</p>
+    <h1>What this page already knows about you</h1>
+    <p class="lede">You clicked a link. That's all. Here's what any website can work out from that.</p>
+  </header>
+
+  <section class="reveal" aria-live="polite">
+    <div id="reveal-art" class="reveal-art"></div>
+    <p id="reveal" class="reveal-line"></p>
+    <p class="scroll-hint">Scroll. It gets more specific.</p>
+  </section>
+
+  <main id="sections"></main>
+
+  <section class="section" id="extensions">
+    <h2><span class="step">07</span>Tap a box, give away more</h2>
+    <ol class="steps-list">
+      <li>Tap the name box.</li>
+      <li>If a list of saved names pops up, pick yours. Then watch the boxes below.</li>
+    </ol>
+    <p class="note small">Password manager asking you to unlock first? You can skip it. Your browser's own list is the one to try. No list at all means your browser isn't saving your details, which is good.</p>
+    <form id="autofill" class="autofill" autocomplete="on" novalidate>
+      <input id="bait" class="bait" type="text" name="name" autocomplete="name" placeholder="Your name" aria-label="Your name, nothing is saved or sent">
+      <fieldset class="xray">
+        <legend>Exposed: the hidden part of the page</legend>
+        <p class="xray-note">Malicious pages can hide these boxes from view and still capture what your browser fills in.</p>
+        <input type="email" name="email" autocomplete="email" placeholder="Email" aria-label="Email" tabindex="-1">
+        <input type="tel" name="tel" autocomplete="tel" placeholder="Phone" aria-label="Phone" tabindex="-1">
+        <input type="text" name="address" autocomplete="street-address" placeholder="Street address" aria-label="Street address" tabindex="-1">
+        <input type="text" name="suburb" autocomplete="address-level2" placeholder="Suburb" aria-label="Suburb" tabindex="-1">
+        <input type="text" name="postcode" autocomplete="postal-code" placeholder="Postcode" aria-label="Postcode" tabindex="-1">
+      </fieldset>
+      <p id="autofill-result" class="autofill-result" aria-live="polite"></p>
+    </form>
+    <div id="extension-cards" class="cards"></div>
+  </section>
+
+  <section class="section together">
+    <h2><span class="step">08</span>Putting it together</h2>
+    <div id="combos" class="cards"></div>
+  </section>
+
+  <section class="section live">
+    <h2><span class="step">09</span>And while you've been reading</h2>
+    <ul id="live" class="live-list" aria-live="polite"></ul>
+  </section>
+
+  <section class="section location">
+    <h2>We could look you up. We chose not to.</h2>
+    <p>Every site you visit sees your internet address. From that it can tell which internet company you use and roughly where you are. No permission needed.</p>
+    <p>We didn't look, because it means sending your address to another company. Tap if you want to see.</p>
+    <button id="provider" class="locate" type="button">Show my internet company</button>
+    <div id="provider-result" class="locate-result" aria-live="polite"></div>
+    <p class="note small">Tapping sends your internet address to <a href="https://www.geojs.io/privacy/">GeoJS</a>, a free lookup service that says it keeps no logs. Data from <a href="https://www.maxmind.com">MaxMind</a> GeoLite2.</p>
+  </section>
+
+  <footer class="section manners">
+    <p class="small">Apart from that button, this page sends nothing anywhere. Everything else was worked out inside your own browser and disappears when you close the tab.</p>
+  </footer>
+
+  <script type="module" src="js/main.js"></script>
+</body>
+</html>
