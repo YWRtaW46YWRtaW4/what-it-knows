@@ -356,19 +356,6 @@ export function makeCombos(s, p, total, extensions) {
       "Settings that are far more common among people who work with computers."));
   }
 
-  const weekday = new Date().getDay() % 6 !== 0;
-  const phone = p.os === "iPhone" || p.os === "Android";
-  const fast = s.connection?.down >= 10;
-  if (phone && s.connection?.kind === "cellular") {
-    out.push(card("pin", "You're probably out and about, on mobile data.", false, "Your phone says it is on mobile data."));
-  } else if (!phone && weekday && p.hour >= 9 && p.hour < 17 && s.extended) {
-    out.push(card("pin", "You're probably at work, at a desk with a second screen.", false, "Weekday, working hours, second screen."));
-  } else if (p.hour >= 18 || p.hour < 7 || !weekday) {
-    const onWifi = s.connection?.kind === "wifi" || (!phone && fast);
-    out.push(card("pin", `You're probably at home${onWifi ? " on wifi" : ""}${p.hour >= 18 ? ", after dinner" : ""}.`, false,
-      "Time of day, day of the week, and your connection."));
-  }
-
   const careful = [];
   if (s.dnt || s.gpc) careful.push("asked not to be tracked");
   const manager = extensions.find((e) => ["1Password", "LastPass", "Bitwarden", "Dashlane"].includes(e));
